@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ShelfView: View {
+    @State private var showingAddBook = false
+
     var body: some View {
         VStack {
             // Top Bar
@@ -10,7 +12,7 @@ struct ShelfView: View {
                     .fontWeight(.bold)
                 Spacer()
                 Button(action: {
-                    // Add book action
+                    showingAddBook = true
                 }) {
                     Image(systemName: "plus")
                         .font(.title)
@@ -44,9 +46,12 @@ struct ShelfView: View {
             .padding()
             .background(Color.white.shadow(radius: 2))
         }
+        //  Sheet for adding book
+        .sheet(isPresented: $showingAddBook) {
+            addBookView()
+        }
     }
 }
-
 
 #Preview {
     ShelfView()
