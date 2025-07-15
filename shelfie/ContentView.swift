@@ -2,7 +2,6 @@ import SwiftUI
 
 struct ShelfView: View {
     @State private var showingAddBook = false
-    @State private var books: [bookItem] = []
 
     var body: some View {
         VStack {
@@ -24,8 +23,8 @@ struct ShelfView: View {
             // Shelf List
             ScrollView {
                 VStack(spacing: 15) {
-                    ForEach(books) { book in
-                        ShelfItemView(book: book)
+                    ForEach(0..<4) { _ in
+                        ShelfItemView()
                     }
                 }
                 .padding()
@@ -47,11 +46,9 @@ struct ShelfView: View {
             .padding()
             .background(Color.white.shadow(radius: 2))
         }
-        // add one sheet modifier with AddBookView
+        //  Sheet for adding book
         .sheet(isPresented: $showingAddBook) {
-            AddBookView { newBook in
-                books.append(newBook)
-            }
+            addBookView()
         }
     }
 }

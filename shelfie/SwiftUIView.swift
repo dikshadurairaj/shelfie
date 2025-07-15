@@ -1,8 +1,13 @@
+//
+//  SwiftUIView.swift
+//  shelfie
+//
+//  Created by Diksha Durairaj on 7/15/25.
+//
+
 import SwiftUI
 
 struct ShelfItemView: View {
-    var book: bookItem
-
     var body: some View {
         HStack {
             Rectangle()
@@ -10,16 +15,8 @@ struct ShelfItemView: View {
                 .frame(width: 50, height: 50)
                 .cornerRadius(5)
 
-            VStack(alignment: .leading) {
-                Text(book.title)
-                    .font(.headline)
-                Text("Rating: \(String(format: "%.1f", book.rating))")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                Text("Status: \(book.status)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+            Text("Add a subheading")
+                .font(.headline)
 
             Spacer()
 
@@ -29,4 +26,8 @@ struct ShelfItemView: View {
         .background(Color.brown.opacity(0.2))
         .cornerRadius(12)
     }
+}
+
+#Preview {
+    ShelfItemView()
 }
