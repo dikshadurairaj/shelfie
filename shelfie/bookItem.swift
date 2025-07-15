@@ -1,7 +1,7 @@
 import Foundation
 
 class bookItem: Identifiable, ObservableObject {
-    let id = UUID() // ✅ This gives each book a unique ID
+    let id = UUID() //  This gives each book a unique ID
 
     @Published var title: String
     @Published var rating: Float
