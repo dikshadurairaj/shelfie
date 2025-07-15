@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct addBookView: View {
-    @State private var rating = 0.0
+    @State public var rating = 0.0
     
     var body: some View {
         VStack {
@@ -22,18 +22,35 @@ struct addBookView: View {
                 .cornerRadius(15)
                 .padding()
             
-            Text("\(rating)")
+            HStack {
+                ForEach(0..<5) { i in
+                    if rating >= Double(i) {
+                        Text("star")
+                    } else if rating.truncatingRemainder(dividingBy: 1) != 0 && rating >= Double(i) - 0.5 {
+                        Text("half star")
+                    } else {
+                        Text("no star")
+                    }
+                }
+            }
             
             HStack {
                 Button("-") {
-                    rating = rating - 0.5
+                    rating = max(0, rating - 0.5)
                 }
                 
                 Text("Rating")
                 
                 Button("+") {
-                    rating = rating + 0.5
+                    rating = min(5, rating + 0.5)
                 }
+            }
+            
+            
+            Picker(selection: .constant(1), label: Text("Status")) {
+                Text("Want to read").tag(1)
+                Text("In progress").tag(2)
+                Text("Read").tag(3)
             }
             
             Button("Add book") {
