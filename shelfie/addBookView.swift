@@ -1,100 +1,74 @@
-//
-//  addBookView.swift
-//  shelfie
-//
-//  Created by Grace Shen on 2025-07-15.
-//
-
 import SwiftUI
 
-struct addBookView: View {
+struct AddBookView: View {
+    @Environment(\.dismiss) var dismiss
+
+    @State private var title = ""
     @State public var rating = 0.0
-    @State private var selectedStatus: Int? = nil
-    
+    @State private var status = "Want to read"
+
+    var onAdd: (bookItem) -> Void
+
+    let statuses = ["Want to read", "In progress", "Read"]
+
     var body: some View {
-        VStack {
-                HStack {
-                    Spacer()
-                    Button("Back") {
-                        
-                    }
-                    .padding(.trailing, 25.0)
-                }
-            
-        
-            Text("Add a New Book")
-                .font(.title)
-                .fontWeight(.bold)
-                .padding(.top, 20.0)
-            
-            Spacer()
-            
-            
+        VStack(spacing: 20) {
+            // Title Input
             Text("Book Title:")
-            TextField("Type book name...", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
+                .font(.title2)
+                .fontWeight(.bold)
+
+            TextField("Type book name...", text: $title)
                 .padding()
                 .background(Color(.systemGroupedBackground))
                 .cornerRadius(15)
-                .padding()
-            
-            
-              // nothing picked yet
 
-            Picker("Status", selection: $selectedStatus) {     // ← label always reads “Status”
-                Text("Want to read").tag(1 as Int?)
-                Text("In progress").tag(2 as Int?)
-                Text("Read").tag(3 as Int?)
-            }
-            
-            /*Picker(selection: .constant(1), label: Text("Status")) {
-                Text("Want to read").tag(1)
-                Text("In progress").tag(2)
-                Text("Read").tag(3)
-            }*/
-            
+            // Star Rating Display
             HStack {
-                ForEach(0..<5) { i in //ill fix this later but it doesnt display 0 stars correctly
-                    if rating >= Double(i) {
-                        Text("star")
-                    } else if rating.truncatingRemainder(dividingBy: 1) != 0 && rating >= Double(i) - 0.5 {
-                        Text("half star")
-                    } else {
-                        Text("no star")
-                    }
+                ForEach(1...5, id: \.self) { i in
+                    Image(systemName: rating >= Double(i) ? "star.fill" :
+                            (rating >= Double(i) - 0.5 ? "star.leadinghalf.filled" : "star"))
+                        .foregroundColor(.yellow)
                 }
             }
-            
+
+            // Rating Adjust
             HStack {
                 Button("-") {
                     rating = max(0, rating - 0.5)
                 }
-                
-                Text("Rating")
-                
+
+                Spacer()
+
+                Text("Rating: \(String(format: "%.1f", rating))")
+
+                Spacer()
+
                 Button("+") {
                     rating = min(5, rating + 0.5)
                 }
             }
-            
-            
+            .padding(.horizontal, 50)
 
-            
-        }
-        
-        VStack {
-            Spacer()
-            Button("Add book") {
-                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
+            // Status Picker
+            Picker("Status", selection: $status) {
+                ForEach(statuses, id: \.self) { option in
+                    Text(option)
+                }
             }
-            .font(.title)
+            .pickerStyle(.segmented)
+
+            // Add Button
+            Button("Add Book") {
+                let newBook = bookItem(title: title, rating: Float(rating), review: "", status: status)
+                onAdd(newBook)
+                dismiss()
+            }
+            .disabled(title.isEmpty)
+            .font(.title3)
             .fontWeight(.bold)
+            .padding(.top, 20)
         }
         .padding()
-        
-        
     }
-}
-
-#Preview {
-    addBookView()
 }
