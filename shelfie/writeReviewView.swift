@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct writeReviewView: View {
+    @State private var bookName = ""
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Review for \(bookName)")
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            Spacer()
+        
+        TextField("Type here", text: $bookName)
     }
 }
 
