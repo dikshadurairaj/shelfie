@@ -1,69 +1,74 @@
-//
-//  addBookView.swift
-//  shelfie
-//
-//  Created by Grace Shen on 2025-07-15.
-//
-
 import SwiftUI
 
-struct addBookView: View {
+struct AddBookView: View {
+    @Environment(\.dismiss) var dismiss
+
+    @State private var title = ""
     @State public var rating = 0.0
-    
+    @State private var status = "Want to read"
+
+    var onAdd: (bookItem) -> Void
+
+    let statuses = ["Want to read", "In progress", "Read"]
+
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
+            // Title Input
             Text("Book Title:")
-                .font(.title)
+                .font(.title2)
                 .fontWeight(.bold)
-            
-            TextField("Type book name...", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
+
+            TextField("Type book name...", text: $title)
                 .padding()
                 .background(Color(.systemGroupedBackground))
                 .cornerRadius(15)
-                .padding()
-            
+
+            // Star Rating Display
             HStack {
-                ForEach(0..<5) { i in
-                    if rating >= Double(i) {
-                        Text("star")
-                    } else if rating.truncatingRemainder(dividingBy: 1) != 0 && rating >= Double(i) - 0.5 {
-                        Text("half star")
-                    } else {
-                        Text("no star")
-                    }
+                ForEach(1...5, id: \.self) { i in
+                    Image(systemName: rating >= Double(i) ? "star.fill" :
+                            (rating >= Double(i) - 0.5 ? "star.leadinghalf.filled" : "star"))
+                        .foregroundColor(.yellow)
                 }
             }
-            
+
+            // Rating Adjust
             HStack {
                 Button("-") {
                     rating = max(0, rating - 0.5)
                 }
-                
-                Text("Rating")
-                
+
+                Spacer()
+
+                Text("Rating: \(String(format: "%.1f", rating))")
+
+                Spacer()
+
                 Button("+") {
                     rating = min(5, rating + 0.5)
                 }
             }
-            
-            
-            Picker(selection: .constant(1), label: Text("Status")) {
-                Text("Want to read").tag(1)
-                Text("In progress").tag(2)
-                Text("Read").tag(3)
+            .padding(.horizontal, 50)
+
+            // Status Picker
+            Picker("Status", selection: $status) {
+                ForEach(statuses, id: \.self) { option in
+                    Text(option)
+                }
             }
-            
-            Button("Add book") {
-                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
+            .pickerStyle(.segmented)
+
+            // Add Button
+            Button("Add Book") {
+                let newBook = bookItem(title: title, rating: Float(rating), review: "", status: status)
+                onAdd(newBook)
+                dismiss()
             }
-            .font(.title)
+            .disabled(title.isEmpty)
+            .font(.title3)
             .fontWeight(.bold)
-            
+            .padding(.top, 20)
         }
         .padding()
     }
-}
-
-#Preview {
-    addBookView()
 }
