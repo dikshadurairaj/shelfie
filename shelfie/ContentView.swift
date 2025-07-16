@@ -5,13 +5,14 @@ struct ShelfView: View {
     @State private var books: [bookItem] = []
     @State private var showingGoalView = false
     @AppStorage("userImageData") private var imageData: Data?
+    @AppStorage("userName") private var userName: String = ""
 
     var body: some View {
         NavigationView {
             VStack {
                 // Top Bar
                 HStack {
-                    Text("Diksha’s Shelf")
+                    Text(nameToDisplay())
                         .font(.title)
                         .fontWeight(.bold)
                     Spacer()
@@ -74,6 +75,9 @@ struct ShelfView: View {
                 }
             }
         }
+    }
+    func nameToDisplay() -> String {
+        return userName.isEmpty ? "Your Shelf" : "\(userName)’s Shelf"
     }
 }
 
