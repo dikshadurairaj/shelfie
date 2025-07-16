@@ -6,6 +6,8 @@ struct AddBookView: View {
     @State private var title = ""
     @State public var rating = 0.0
     @State private var status = "Want to read"
+    @State private var review = ""
+    @State private var writingReview = false
 
     var onAdd: (bookItem) -> Void
 
@@ -57,9 +59,24 @@ struct AddBookView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    
+                    if status == "Read" {
+                        Button("Write a review...") {
+                            writingReview = true
+                        }
+                    }
+                    
+            
+                    if writingReview {
+                        TextField("Type here...", text: $review)  // <-- bind to state
+                            .frame(width: 325, height: 100)
+                            .padding()
+                            .background(Color(.systemGroupedBackground))
+                            .cornerRadius(15)
+                    }
 
                     Button("Add Book") {
-                        let newBook = bookItem(title: title, rating: Float(rating), review: "", status: status)
+                        let newBook = bookItem(title: title, rating: Float(rating), review: review, status: status)
                         onAdd(newBook)
                         dismiss()
                     }
@@ -70,6 +87,7 @@ struct AddBookView: View {
                 }
                 .padding()
             }
+            
 
             Button(action: {
                 dismiss()
