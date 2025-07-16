@@ -72,6 +72,10 @@ struct ShelfView: View {
             .sheet(isPresented: $showingAddBook) {
                 AddBookView { newBook in
                     books.append(newBook)
+                    totalBooksCount += 1
+                    if newBook.status == "Read" {
+                        totalBooksRead += 1
+                    }
                 }
             }
         }

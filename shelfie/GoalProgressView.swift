@@ -9,12 +9,11 @@ import SwiftUI
 
 struct GoalProgressView: View {
     @State private var goal: Int = 0
-    @State private var booksRead: Int = 0
+    @State private var booksRead: Int = totalBooksRead
     @State private var showingSetGoal = false
     @Environment(\.dismiss) var dismiss
     
-    @State private var books: [bookItem] = []
-    
+    //deleted private from conetntview
     //work on counting the read books in array
     
     var progress: Double {
@@ -22,7 +21,6 @@ struct GoalProgressView: View {
     }
 
     var body: some View {
-        
         NavigationView {
             VStack(spacing: 20) {
                 HStack {
