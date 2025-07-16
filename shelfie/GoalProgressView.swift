@@ -11,6 +11,7 @@ struct GoalProgressView: View {
     @State private var goal: Int = 0
     @State private var booksRead: Int = 0
     @State private var showingSetGoal = false
+    @Environment(\.dismiss) var dismiss
 
     var progress: Double {
         goal == 0 ? 0 : Double(booksRead) / Double(goal)
@@ -19,6 +20,17 @@ struct GoalProgressView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
+                HStack {
+                    Spacer()
+                        Button(action: {dismiss()}) {
+                                Image(systemName: "xmark")
+                                    .foregroundColor(.black)
+                                    .padding()
+                                    .background(Color(.systemGray5))
+                                    .clipShape(Circle())
+                                }
+                                .padding()
+                            }
                 Text("📚 Reading Challenge")
                     .font(.title2)
                     .bold()
@@ -42,18 +54,13 @@ struct GoalProgressView: View {
                     SetGoalView(currentGoal: $goal)
                 }
 
-                // 📌 Temporary test button to simulate finishing a book
-                Button("Mark Book as Read") {
-                    if booksRead < goal {
-                        booksRead += 1
-                    }
-                }
                 .padding(.top, 10)
                 .foregroundColor(.blue)
 
-                // 🔄 Later, this will be triggered when a user marks a book finished in their reading list.
+                // Later, this will be triggered when a user marks a book finished in their reading list.
 
                 Spacer()
+                
             }
             .padding()
             .navigationTitle("Your Goal")

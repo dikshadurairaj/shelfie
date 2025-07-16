@@ -3,6 +3,7 @@ import SwiftUI
 struct ShelfView: View {
     @State private var showingAddBook = false
     @State private var books: [bookItem] = []
+    @State private var showingGoalView = false
 
     var body: some View {
         VStack {
@@ -38,7 +39,11 @@ struct ShelfView: View {
                 Spacer()
                 Image(systemName: "person.3.fill")
                 Spacer()
-                Image(systemName: "target")
+                Button(action: {
+                    showingGoalView = true
+                }) {
+                    Image(systemName: "target")
+                }
                 Spacer()
                 Image(systemName: "person.crop.circle")
                 Spacer()
@@ -46,6 +51,10 @@ struct ShelfView: View {
             .font(.title2)
             .padding()
             .background(Color.white.shadow(radius: 2))
+            .fullScreenCover(isPresented: $showingGoalView) {
+                GoalProgressView()
+            }
+
         }
         // add one sheet modifier with AddBookView
         .sheet(isPresented: $showingAddBook) {
