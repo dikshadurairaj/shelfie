@@ -12,12 +12,17 @@ struct GoalProgressView: View {
     @State private var booksRead: Int = 0
     @State private var showingSetGoal = false
     @Environment(\.dismiss) var dismiss
-
+    
+    @State private var books: [bookItem] = []
+    
+    //work on counting the read books in array
+    
     var progress: Double {
         goal == 0 ? 0 : Double(booksRead) / Double(goal)
     }
 
     var body: some View {
+        
         NavigationView {
             VStack(spacing: 20) {
                 HStack {

@@ -16,6 +16,7 @@ struct editBookView: View {
     @State private var title: String
     @State private var rating: Double
     @State private var status: String
+    @State private var review: String
 
     let statuses = ["Want to read", "In progress", "Read"]
 
@@ -25,6 +26,7 @@ struct editBookView: View {
         _title = State(initialValue: book.title)
         _rating = State(initialValue: Double(book.rating))
         _status = State(initialValue: book.status)
+        _review = State(initialValue: book.review)
     }
 
     var body: some View {
@@ -61,13 +63,19 @@ struct editBookView: View {
                 }
             }
             .pickerStyle(.segmented)
+            
+            TextField("Type your review here...", text: $review)  // <-- bind to state
+                .frame(width: 325, height: 100)
+                .padding()
+                .background(Color(.systemGroupedBackground))
+                .cornerRadius(15)
 
             Button("Save") {
                 let updatedBook = bookItem(
                     title: title,
                     rating: Float(rating),
-                    review: book.review,
-                    status: status
+                    review: review,
+                    status: status,
                 )
                 onSave(updatedBook)
                 dismiss()
