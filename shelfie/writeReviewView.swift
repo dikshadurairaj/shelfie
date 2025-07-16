@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct writeReviewView: View {
-    @State private var bookName = ""
+struct WriteReviewView: View {
+    @State private var bookName = "Sample Book"
+    @State private var reviewText = ""      // <-- Store user input here
+    @State private var showingAlert = false // <-- Show confirmation
     
     var body: some View {
         VStack {
@@ -16,27 +18,37 @@ struct writeReviewView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            TextField("Type here...", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-                .frame(width: 300, height: 25)
+            TextField("Type here...", text: $reviewText)  // <-- bind to state
+                .frame(width: 300, height: 100)
                 .padding()
                 .background(Color(.systemGroupedBackground))
                 .cornerRadius(15)
                 .padding()
             
             Button("Save") {
-                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
+                // For now, just print review to console
+                print("Saved review: \(reviewText)")
+                
+                // Show a confirmation alert
+                showingAlert = true
+                
+                // Here, you could also add code to save to a model, file, database, etc.
             }
             .font(.title2)
             .buttonStyle(.bordered)
             .tint(.purple)
             .padding(.top)
-                
+            .alert("Review Saved", isPresented: $showingAlert) {
+                Button("OK", role: .cancel) { }
+            }
         }
-        
         .padding()
     }
 }
 
-#Preview {
-    writeReviewView()
+struct WriteReviewView_Previews: PreviewProvider {
+    static var previews: some View {
+        WriteReviewView()
+    }
 }
+
