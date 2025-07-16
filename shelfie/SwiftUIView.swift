@@ -32,12 +32,27 @@ struct ShelfItemView: View {
             }
             .buttonStyle(.plain)
             
+            
+            .sheet(isPresented: $showingEdit) {
+                editBookView(
+                    book: book,
+                    onSave: { updatedBook in
+                        self.book = updatedBook 
+                        showingEdit = false
+                    },
+                    onDelete: { bookToDelete in
+                        showingEdit = false
+                    }
+                )
+            }
+            
+            /*
             .sheet(isPresented: $showingEdit) {
                             editBookView(book: book) { updatedBook in
                                 self.book = updatedBook // update with edited version!!
                                 showingEdit = false
                             }
-                        }
+                        }*/
         }
         .padding()
         .background(Color.brown.opacity(0.2))

@@ -12,6 +12,7 @@ struct editBookView: View {
 
     var book: bookItem
     var onSave: (bookItem) -> Void
+    var onDelete: (bookItem) -> Void
 
     @State private var title: String
     @State private var rating: Double
@@ -20,9 +21,11 @@ struct editBookView: View {
 
     let statuses = ["Want to read", "In progress", "Read"]
 
-    init(book: bookItem, onSave: @escaping (bookItem) -> Void) {
+    //created hte on delete
+    init(book: bookItem, onSave: @escaping (bookItem) -> Void, onDelete: @escaping (bookItem) -> Void) {
         self.book = book
         self.onSave = onSave
+        self.onDelete = onDelete
         _title = State(initialValue: book.title)
         _rating = State(initialValue: Double(book.rating))
         _status = State(initialValue: book.status)
@@ -69,6 +72,8 @@ struct editBookView: View {
                 .padding()
                 .background(Color(.systemGroupedBackground))
                 .cornerRadius(15)
+            
+            
 
             Button("Save") {
                 let updatedBook = bookItem(
@@ -84,6 +89,17 @@ struct editBookView: View {
             .font(.title3)
             .fontWeight(.bold)
             .padding(.top, 20)
+            
+            Button("Delete from my library") {
+                onDelete(book)
+                
+                totalBooksCount -= 1
+                if status == "Read" {
+                    totalBooksRead -= 1
+                }
+                dismiss()
+            }
+            .foregroundColor(.red)
 
             Spacer()
         }
