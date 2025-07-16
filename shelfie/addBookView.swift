@@ -68,7 +68,7 @@ struct AddBookView: View {
                     
             
                     if writingReview {
-                        TextField("Type here...", text: $review)  // <-- bind to state
+                        TextField("Type your review here...", text: $review)  // <-- bind to state
                             .frame(width: 325, height: 100)
                             .padding()
                             .background(Color(.systemGroupedBackground))
