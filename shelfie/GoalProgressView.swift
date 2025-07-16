@@ -79,7 +79,7 @@ struct GoalProgressView: View {
                             SetGoalView(currentGoal: $goal)
                         }
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 10)
                         .background(Color(hex: "B69FD5"))
