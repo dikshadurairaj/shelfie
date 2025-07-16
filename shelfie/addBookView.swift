@@ -12,72 +12,79 @@ struct AddBookView: View {
     let statuses = ["Want to read", "In progress", "Read"]
 
     var body: some View {
-        VStack(spacing: 20) {
-            
-            HStack {
-                Spacer()
-                Button("Back") {
-                    dismiss()
-                }
-            }
-            Spacer()
-    
-            // Title Input
-            Text("Book Title:")
-                .font(.title2)
-                .fontWeight(.bold)
+        ZStack(alignment: .topTrailing) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Color.clear.frame(height: 60)
 
-            TextField("Type book name...", text: $title)
+                    Text("Book Title:")
+                        .font(.title2)
+                        .fontWeight(.bold)
+
+                    TextField("Type book name...", text: $title)
+                        .padding()
+                        .background(Color(.systemGroupedBackground))
+                        .cornerRadius(15)
+
+                    HStack {
+                        ForEach(1...5, id: \.self) { i in
+                            Image(systemName: rating >= Double(i) ? "star.fill" :
+                                    (rating >= Double(i) - 0.5 ? "star.leadinghalf.filled" : "star"))
+                                .foregroundColor(.yellow)
+                        }
+                    }
+
+                    HStack {
+                        Button("-") {
+                            rating = max(0, rating - 0.5)
+                        }
+
+                        Spacer()
+
+                        Text("Rating: \(String(format: "%.1f", rating))")
+
+                        Spacer()
+
+                        Button("+") {
+                            rating = min(5, rating + 0.5)
+                        }
+                    }
+                    .padding(.horizontal, 50)
+
+                    Picker("Status", selection: $status) {
+                        ForEach(statuses, id: \.self) { option in
+                            Text(option)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+
+                    Button("Add Book") {
+                        let newBook = bookItem(title: title, rating: Float(rating), review: "", status: status)
+                        onAdd(newBook)
+                        dismiss()
+                    }
+                    .disabled(title.isEmpty)
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .padding(.top, 10)
+                }
                 .padding()
-                .background(Color(.systemGroupedBackground))
-                .cornerRadius(15)
-
-            // Star Rating Display
-            HStack {
-                ForEach(1...5, id: \.self) { i in
-                    Image(systemName: rating >= Double(i) ? "star.fill" :
-                            (rating >= Double(i) - 0.5 ? "star.leadinghalf.filled" : "star"))
-                        .foregroundColor(.yellow)
-                }
             }
 
-            // Rating Adjust
-            HStack {
-                Button("-") {
-                    rating = max(0, rating - 0.5)
-                }
-
-                Spacer()
-
-                Text("Rating: \(String(format: "%.1f", rating))")
-
-                Spacer()
-
-                Button("+") {
-                    rating = min(5, rating + 0.5)
-                }
-            }
-            .padding(.horizontal, 50)
-
-            // Status Picker
-            Picker("Status", selection: $status) {
-                ForEach(statuses, id: \.self) { option in
-                    Text(option)
-                }
-            }
-            .pickerStyle(.segmented)
-
-            // Add Button
-            Button("Add Book") {
-                let newBook = bookItem(title: title, rating: Float(rating), review: "", status: status)
-                onAdd(newBook)
+            Button(action: {
                 dismiss()
+            }) {
+                Image(systemName: "xmark")
+                    .foregroundColor(.black)
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .clipShape(Circle())
             }
-            .disabled(title.isEmpty)
-            .font(.title3)
-            .fontWeight(.bold)
-            .padding(.top, 20)
+            .padding()
         }
-        .padding()
     }
+}
+
+#Preview {
+    AddBookView { _ in }
 }
