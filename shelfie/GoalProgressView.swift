@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GoalProgressView: View {
     @State private var goal: Int = 0
-    @State private var booksRead: Int = 0
+    @State private var booksRead: Int = totalBooksRead
     @State private var showingSetGoal = false
     @Environment(\.dismiss) var dismiss
     

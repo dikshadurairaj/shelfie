@@ -1,5 +1,8 @@
 import Foundation
 
+var totalBooksCount = 0
+var totalBooksRead = 0
+
 class bookItem: Identifiable, ObservableObject {
     let id = UUID() //  This gives each book a unique ID
 
