@@ -4,62 +4,74 @@ struct ShelfView: View {
     @State private var showingAddBook = false
     @State private var books: [bookItem] = []
     @State private var showingGoalView = false
+    @AppStorage("userImageData") private var imageData: Data?
 
     var body: some View {
-        VStack {
-            // Top Bar
-            HStack {
-                Text("Diksha’s Shelf")
-                    .font(.title)
-                    .fontWeight(.bold)
-                Spacer()
-                Button(action: {
-                    showingAddBook = true
-                }) {
-                    Image(systemName: "plus")
+        NavigationView {
+            VStack {
+                // Top Bar
+                HStack {
+                    Text("Diksha’s Shelf")
                         .font(.title)
-                }
-            }
-            .padding()
-
-            // Shelf List
-            ScrollView {
-                VStack(spacing: 15) {
-                    ForEach($books) { book in
-                        ShelfItemView(book: book)
+                        .fontWeight(.bold)
+                    Spacer()
+                    Button(action: {
+                        showingAddBook = true
+                    }) {
+                        Image(systemName: "plus")
+                            .font(.title)
                     }
                 }
                 .padding()
-            }
 
-            Spacer()
-            
-            // Bottom Navigation Bar
-            HStack {
-                Spacer()
-                Image(systemName: "person.3.fill")
-                Spacer()
-                Button(action: {
-                    showingGoalView = true
-                }) {
-                    Image(systemName: "target")
+                // Shelf List
+                ScrollView {
+                    VStack(spacing: 15) {
+                        ForEach($books) { book in
+                            ShelfItemView(book: book)
+                        }
+                    }
+                    .padding()
                 }
-                Spacer()
-                Image(systemName: "person.crop.circle")
-                Spacer()
-            }
-            .font(.title2)
-            .padding()
-            .background(Color.white.shadow(radius: 2))
-            .fullScreenCover(isPresented: $showingGoalView) {
-                GoalProgressView()
-            }
 
-        }
-        // add one sheet modifier with AddBookView
-        .sheet(isPresented: $showingAddBook) {
-            AddBookView { newBook in
-                books.append(newBook)
+                Spacer()
+
+                // Bottom Navigation Bar
+                HStack {
+                    Spacer()
+                    Image(systemName: "person.3.fill")
+                    Spacer()
+                    Button(action: {
+                        showingGoalView = true
+                    }) {
+                        Image(systemName: "target")
+                    }
+                    Spacer()
+                    NavigationLink(destination: ProfileView()) {
+                        if let data = imageData, let uiImage = UIImage(data: data) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 30, height: 30)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.purple, lineWidth: 1))
+                        } else {
+                            Image(systemName: "person.crop.circle")
+                        }
+                    }
+                    Spacer()
+                }
+                .font(.title2)
+                .padding()
+                .background(Color.white.shadow(radius: 2))
+                .fullScreenCover(isPresented: $showingGoalView) {
+                    GoalProgressView()
+                }
+            }
+            .sheet(isPresented: $showingAddBook) {
+                AddBookView { newBook in
+                    books.append(newBook)
+                }
             }
         }
     }
@@ -68,3 +80,4 @@ struct ShelfView: View {
 #Preview {
     ShelfView()
 }
+
