@@ -24,7 +24,7 @@ struct ShelfView: View {
             // Shelf List
             ScrollView {
                 VStack(spacing: 15) {
-                    ForEach(books) { book in
+                    ForEach($books) { book in
                         ShelfItemView(book: book)
                     }
                 }
