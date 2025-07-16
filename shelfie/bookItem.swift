@@ -18,3 +18,17 @@ class bookItem: Identifiable, ObservableObject {
         self.status = status
     }
 }
+
+class UserProfile: Identifiable, ObservableObject {
+    let id = UUID()
+
+    @Published var name: String
+    @Published var bio: String
+    @Published var books: [bookItem]
+
+    init(name: String, bio: String = "", books: [bookItem]) {
+        self.name = name
+        self.bio = bio
+        self.books = books
+    }
+}
