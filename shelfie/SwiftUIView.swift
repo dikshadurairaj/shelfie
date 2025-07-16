@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct ShelfItemView: View {
-    var book: bookItem
-
+    @Binding var book: bookItem
+    @State private var showingEdit = false
     var body: some View {
         HStack {
             Rectangle()
@@ -23,7 +23,21 @@ struct ShelfItemView: View {
 
             Spacer()
 
-            Image(systemName: "eye")
+            Button(action: {
+                showingEdit = true
+            }) {
+                Image(systemName: "eye")
+                    .font(.system(size: 24))
+                    .foregroundColor(.primary)
+            }
+            .buttonStyle(.plain)
+            
+            .sheet(isPresented: $showingEdit) {
+                            editBookView(book: book) { updatedBook in
+                                self.book = updatedBook // update with edited version!!
+                                showingEdit = false
+                            }
+                        }
         }
         .padding()
         .background(Color.brown.opacity(0.2))

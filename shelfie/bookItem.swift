@@ -7,7 +7,7 @@ class bookItem: Identifiable, ObservableObject {
     @Published var rating: Float
     @Published var review: String
     @Published var status: String
-
+  
     init(title: String, rating: Float, review: String, status: String) {
         self.title = title
         self.rating = rating

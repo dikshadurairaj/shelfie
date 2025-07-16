@@ -1,65 +1,60 @@
+//
+//  editBookView.swift
+//  shelfie
+//
+//  Created by Grace Shen on 2025-07-16.
+//
+
 import SwiftUI
 
-struct AddBookView: View {
+struct editBookView: View {
     @Environment(\.dismiss) var dismiss
 
-    @State private var title = ""
-    @State public var rating = 0.0
-    @State private var status = "Want to read"
+    var book: bookItem
+    var onSave: (bookItem) -> Void
 
-    var onAdd: (bookItem) -> Void
+    @State private var title: String
+    @State private var rating: Double
+    @State private var status: String
 
     let statuses = ["Want to read", "In progress", "Read"]
 
+    init(book: bookItem, onSave: @escaping (bookItem) -> Void) {
+        self.book = book
+        self.onSave = onSave
+        _title = State(initialValue: book.title)
+        _rating = State(initialValue: Double(book.rating))
+        _status = State(initialValue: book.status)
+    }
+
     var body: some View {
         VStack(spacing: 20) {
-            
-            HStack {
-                Spacer()
-                Button("Back") {
-                    dismiss()
-                }
-            }
-            Spacer()
-    
-            // Title Input
-            Text("Book Title:")
-                .font(.title2)
-                .fontWeight(.bold)
-
-            TextField("Type book name...", text: $title)
+            TextField("Book title", text: $title)
                 .padding()
-                .background(Color(.systemGroupedBackground))
-                .cornerRadius(15)
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
 
-            // Star Rating Display
             HStack {
                 ForEach(1...5, id: \.self) { i in
                     Image(systemName: rating >= Double(i) ? "star.fill" :
-                            (rating >= Double(i) - 0.5 ? "star.leadinghalf.filled" : "star"))
+                          (rating >= Double(i) - 0.5 ? "star.leadinghalf.filled" : "star"))
                         .foregroundColor(.yellow)
                 }
             }
 
-            // Rating Adjust
             HStack {
                 Button("-") {
                     rating = max(0, rating - 0.5)
                 }
-
                 Spacer()
-
                 Text("Rating: \(String(format: "%.1f", rating))")
-
                 Spacer()
-
                 Button("+") {
                     rating = min(5, rating + 0.5)
                 }
             }
             .padding(.horizontal, 50)
 
-            // Status Picker
             Picker("Status", selection: $status) {
                 ForEach(statuses, id: \.self) { option in
                     Text(option)
@@ -67,17 +62,24 @@ struct AddBookView: View {
             }
             .pickerStyle(.segmented)
 
-            // Add Button
-            Button("Add Book") {
-                let newBook = bookItem(title: title, rating: Float(rating), review: "", status: status)
-                onAdd(newBook)
+            Button("Save") {
+                let updatedBook = bookItem(
+                    title: title,
+                    rating: Float(rating),
+                    review: book.review,
+                    status: status
+                )
+                onSave(updatedBook)
                 dismiss()
             }
             .disabled(title.isEmpty)
             .font(.title3)
             .fontWeight(.bold)
             .padding(.top, 20)
+
+            Spacer()
         }
         .padding()
+        .navigationTitle("Edit Book")
     }
 }
