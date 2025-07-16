@@ -4,6 +4,7 @@ struct ShelfView: View {
     @State private var showingAddBook = false
     @State private var books: [bookItem] = []
     @State private var showingGoalView = false
+    @State private var showingCommunityView = false
     @AppStorage("userImageData") private var imageData: Data?
     @AppStorage("userName") private var userName: String = ""
 
@@ -40,7 +41,14 @@ struct ShelfView: View {
                 // Bottom Navigation Bar
                 HStack {
                     Spacer()
-                    Image(systemName: "person.3.fill")
+                    Button(action: {
+                        showingCommunityView = true
+                    }) {
+                        Image(systemName: "person.3.fill")
+                    }
+                    .sheet(isPresented: $showingCommunityView) {
+                        CommunityExploreView()
+                    }
                     Spacer()
                     Button(action: {
                         showingGoalView = true
