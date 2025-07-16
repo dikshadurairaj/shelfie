@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GoalProgressView: View {
-    @State private var goal: Int = 0
+    @AppStorage("readingGoal") private var goal: Int = 0
     @State private var booksRead: Int = totalBooksRead
     @State private var showingSetGoal = false
     @Environment(\.dismiss) var dismiss
@@ -79,7 +79,7 @@ struct GoalProgressView: View {
                             SetGoalView(currentGoal: $goal)
                         }
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 10)
                         .background(Color(hex: "B69FD5"))
