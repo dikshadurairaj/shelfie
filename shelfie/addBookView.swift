@@ -1,5 +1,5 @@
 //
-//  addBookView.swift
+//  AddBookView.swift
 //  shelfie
 //
 //  Created by Grace Shen on 2025-07-16.
@@ -189,17 +189,20 @@ struct AddBookView: View {
                             .foregroundColor(Color(hex: "B69FD5"))
                             .padding(.horizontal)
 
-                        TextEditor(text: $review)
-                            .frame(height: 100)
-                            .padding()
-                            .background(Color.white.opacity(0.85))
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .stroke(Color(hex: "B69FD5"), lineWidth: 1.5)
-                            )
-                            .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-                            .padding(.horizontal)
+                        ScrollView {
+                            TextEditor(text: $review)
+                                .frame(minHeight: 100, maxHeight: 200)
+                                .padding()
+                                .background(Color.white.opacity(0.85))
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .stroke(Color(hex: "B69FD5"), lineWidth: 1.5)
+                                )
+                                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                        }
+                        .frame(height: 200)
+                        .padding(.horizontal)
                     }
 
                     Button(action: {
@@ -233,6 +236,7 @@ struct AddBookView: View {
                 .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 5)
                 .padding(.horizontal)
                 .padding(.top, 40)
+                .padding(.bottom, 60)
             }
 
             Button(action: {
