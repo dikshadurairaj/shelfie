@@ -1,24 +1,18 @@
-//
-//  shelfieApp.swift
-//  shelfie
-//
-//  Created by Diksha Durairaj on 7/15/25.
-//
-
 import SwiftUI
 import Firebase
 
 @main
-struct shelfieApp: App {
-    
-    init () {
-        FirebaseApp.configure()
-    
+struct ShelfieApp: App {
+    @StateObject var auth = UserAuth()
+
+    init() {
+        FirebaseApp.configure() 
     }
-    
+
     var body: some Scene {
         WindowGroup {
-            ShelfView()
+            AuthenticationRootView()
+                .environmentObject(auth)
         }
     }
 }

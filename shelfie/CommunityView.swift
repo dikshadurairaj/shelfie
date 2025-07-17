@@ -1,23 +1,19 @@
 import SwiftUI
 
 struct CommunityExploreView: View {
-    // Later use real data from firebase, but rn i just hard coded fake names and stuff
-    let users: [UserProfile] = [
-        UserProfile(name: "Georgie", books: [bookItem(title: "Dune", rating: 4.5, review: "", status: "Read")]),
-        UserProfile(name: "Sheldon", books: [bookItem(title: "Atomic Habits", rating: 5, review: "", status: "In progress")]),
-        UserProfile(name: "Missy", books: [bookItem(title: "Circe", rating: 4.0, review: "", status: "Read")])
-    ]
-
+    @StateObject var viewModel = DiscoverViewModel()  // Use your ViewModel to fetch data
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
-                    ForEach(users) { user in
+                    ForEach(viewModel.users) { user in
                         VStack(alignment: .leading) {
                             Text(user.name)
                                 .font(.headline)
+                                .padding(.leading, 8)
+                            
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
                                     ForEach(user.books) { book in
@@ -37,11 +33,13 @@ struct CommunityExploreView: View {
                                         .padding(4)
                                     }
                                 }
+                                .padding(.leading, 8)
                             }
                         }
                         .padding()
                         .background(Color(.systemGroupedBackground))
                         .cornerRadius(15)
+                        .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
                     }
                 }
                 .padding()
@@ -53,6 +51,9 @@ struct CommunityExploreView: View {
                         dismiss()
                     }
                 }
+            }
+            .onAppear {
+                viewModel.fetchUsers()
             }
         }
     }
