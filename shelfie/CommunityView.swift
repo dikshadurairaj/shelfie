@@ -1,4 +1,5 @@
 import SwiftUI
+import FirebaseFirestore
 
 struct CommunityExploreView: View {
     @StateObject var viewModel = DiscoverViewModel()  // Use your ViewModel to fetch data
@@ -56,5 +57,37 @@ struct CommunityExploreView: View {
                 viewModel.fetchUsers()
             }
         }
+    }
+}
+
+func fetchAllUsers(completion: @escaping ([UserProfile]) -> Void) {
+    let db = Firestore.firestore()
+    db.collection("users").getDocuments { snapshot, error in
+        if let error = error {
+            print("Error fetching users: \(error.localizedDescription)")
+            completion([])
+            return
+        }
+
+        let users = snapshot?.documents.compactMap { doc -> UserProfile? in
+            let data = doc.data()
+            guard let name = data["name"] as? String,
+                  let booksArray = data["books"] as? [[String: Any]] else {
+                return nil
+            }
+
+            let books = booksArray.map { dict in
+                bookItem(
+                    title: dict["title"] as? String ?? "",
+                    rating: dict["rating"] as? Float ?? 0,
+                    review: dict["review"] as? String ?? "",
+                    status: dict["status"] as? String ?? ""
+                )
+            }
+
+            return UserProfile(name: name, books: books)
+        } ?? []
+
+        completion(users)
     }
 }
