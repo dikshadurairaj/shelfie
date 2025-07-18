@@ -45,36 +45,82 @@ struct LoginView: View {
     @ObservedObject private var auth = UserAuth()
 
     var body: some View {
-        VStack(spacing: 16) {
-            Text("Login")
-                .font(.largeTitle)
+        ZStack {
+            // Background gradient to match ShelfView
+            LinearGradient(
+                gradient: Gradient(colors: [Color(.systemGray6), .white]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
 
-            TextField("Email", text: $email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+            VStack(spacing: 24) {
+                Text("Welcome Back")
+                    .font(.system(size: 32, weight: .semibold, design: .rounded))
+                    .foregroundColor(.primary)
+                    .padding(.top, 50)
 
-            SecureField("Password", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                VStack(spacing: 16) {
+                    TextField("Email", text: $email)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.white)
+                                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 3)
+                        )
+                        .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
 
-            Button("Log In") {
-                auth.logIn(email: email, password: password) { error in
-                    if error == nil {
-                        onLoginSuccess()
-                    } else {
-                        print("Login error: \(error!.localizedDescription)")
+                    SecureField("Password", text: $password)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.white)
+                                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 3)
+                        )
+                }
+                .padding(.horizontal, 24)
+
+                VStack(spacing: 14) {
+                    Button(action: {
+                        auth.logIn(email: email, password: password) { error in
+                            if error == nil { onLoginSuccess() }
+                            else { print("Login error: \(error!.localizedDescription)") }
+                        }
+                    }) {
+                        Text("Log In")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.purple)
+                            .cornerRadius(12)
+                            .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    }
+
+                    Button(action: {
+                        auth.signUp(email: email, password: password) { error in
+                            if error == nil { onLoginSuccess() }
+                            else { print("Signup error: \(error!.localizedDescription)") }
+                        }
+                    }) {
+                        Text("Sign Up")
+                            .font(.headline)
+                            .foregroundColor(.purple)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.purple.opacity(0.15))
+                            .cornerRadius(12)
                     }
                 }
-            }
+                .padding(.horizontal, 24)
 
-            Button("Sign Up") {
-                auth.signUp(email: email, password: password) { error in
-                    if error == nil {
-                        onLoginSuccess()
-                    } else {
-                        print("Signup error: \(error!.localizedDescription)")
-                    }
-                }
+                Spacer()
             }
         }
-        .padding()
     }
+}
+
+#Preview {
+    LoginView(onLoginSuccess: { print("Logged in!") })
 }
