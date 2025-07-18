@@ -1,20 +1,23 @@
 import SwiftUI
-import FirebaseFirestore
 
 struct CommunityExploreView: View {
-    @StateObject var viewModel = DiscoverViewModel()  // Use your ViewModel to fetch data
+    // Later you can fetch real data, for now here's sample data
+    let users: [UserProfile] = [
+        UserProfile(name: "Sheldon", books: [bookItem(title: "Einstein + Quantum Physics", rating: 3.5, review: "", status: "Read")]),
+        UserProfile(name: "Missy", books: [bookItem(title: "Baseball for Girls", rating: 5, review: "", status: "In progress")]),
+        UserProfile(name: "Georgie", books: [bookItem(title: "Get Rich Quick", rating: 4.0, review: "", status: "Read")])
+    ]
+
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
-                    ForEach(viewModel.users) { user in
+                    ForEach(users) { user in
                         VStack(alignment: .leading) {
                             Text(user.name)
                                 .font(.headline)
-                                .padding(.leading, 8)
-                            
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
                                     ForEach(user.books) { book in
@@ -34,13 +37,11 @@ struct CommunityExploreView: View {
                                         .padding(4)
                                     }
                                 }
-                                .padding(.leading, 8)
                             }
                         }
                         .padding()
                         .background(Color(.systemGroupedBackground))
                         .cornerRadius(15)
-                        .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
                     }
                 }
                 .padding()
@@ -53,41 +54,6 @@ struct CommunityExploreView: View {
                     }
                 }
             }
-            .onAppear {
-                viewModel.fetchUsers()
-            }
         }
-    }
-}
-
-func fetchAllUsers(completion: @escaping ([UserProfile]) -> Void) {
-    let db = Firestore.firestore()
-    db.collection("users").getDocuments { snapshot, error in
-        if let error = error {
-            print("Error fetching users: \(error.localizedDescription)")
-            completion([])
-            return
-        }
-
-        let users = snapshot?.documents.compactMap { doc -> UserProfile? in
-            let data = doc.data()
-            guard let name = data["name"] as? String,
-                  let booksArray = data["books"] as? [[String: Any]] else {
-                return nil
-            }
-
-            let books = booksArray.map { dict in
-                bookItem(
-                    title: dict["title"] as? String ?? "",
-                    rating: dict["rating"] as? Float ?? 0,
-                    review: dict["review"] as? String ?? "",
-                    status: dict["status"] as? String ?? ""
-                )
-            }
-
-            return UserProfile(name: name, books: books)
-        } ?? []
-
-        completion(users)
     }
 }
